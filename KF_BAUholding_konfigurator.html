@@ -155,6 +155,7 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
 .ry{background:var(--c-yellow-bg)!important;} .ry:hover{background:#fff6c0!important;}
 .ro{background:var(--c-olive-bg)!important;} .ro:hover{background:#e4f5cc!important;}
 .rb{background:#eaf4ff!important;} .rb:hover{background:#dbeafe!important;}
+.rorange{background:#fff7ed!important;border-left:3px solid #f97316!important;} .rorange:hover{background:#ffedd5!important;}
 .grp-hdr td{background:#edf2fa!important;padding:5px 10px!important;font-size:10px!important;font-weight:700!important;color:var(--c-primary)!important;text-transform:uppercase;letter-spacing:.7px;border-top:2px solid #d0dae8!important;}
 
 /* CHECKBOX */
@@ -250,6 +251,63 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
   .mob-sticky{display:none!important;}
   body{padding-bottom:0!important;}
 }
+
+/* DARK MODE */
+.dark{
+  --c-primary:#0f172a;--c-primary2:#1e293b;
+  --c-surface:#1e293b;--c-border:#334155;
+  --c-text:#e2e8f0;--c-muted:#94a3b8;
+  --c-green-bg:#14281f;--c-green-bd:#166534;
+  --c-red-bg:#2c1518;--c-red-bd:#9b1c1c;
+  --c-yellow-bg:#2c2700;--c-yellow-bd:#854d0e;
+  --c-olive-bg:#1a2c0a;--c-olive-bd:#365314;
+  --shadow:0 1px 4px rgba(0,0,0,0.4),0 4px 16px rgba(0,0,0,0.3);
+}
+.dark body{background:#0f172a;}
+.dark .card{background:#1e293b;border:1px solid #334155;}
+.dark .nav{background:#1e293b;}
+.dark .nav-item{color:#cbd5e1;border-bottom-color:#334155;}
+.dark .nav-item:hover,.dark .nav-item.act{background:#263348;color:#e2e8f0;}
+.dark .fg input{background:#0f172a;border-color:#334155;color:#e2e8f0;}
+.dark .fg label{color:#94a3b8;}
+.dark .ihead{background:#263348;color:#94a3b8;}
+.dark .sbar{background:#263348;}
+.dark .sbar input{background:#1e293b;border-color:#334155;color:#e2e8f0;}
+.dark .legend{background:#263348;color:#94a3b8;}
+.dark .pill{background:#263348;color:#cbd5e1;border-color:#334155;}
+.dark .pill.on{background:#1e3a5f;color:#93c5fd;border-color:#3b82f6;}
+.dark .grp-hdr-row{background:#263348!important;color:#93c5fd!important;}
+.dark .rg{background:#14281f!important;} .dark .rg:hover{background:#16312400!important;}
+.dark .rr{background:#2c1518!important;} .dark .rr:hover{background:#3c191c!important;}
+.dark .ry{background:#2c2700!important;} .dark .ry:hover{background:#3c3400!important;}
+.dark .ro{background:#1a2c0a!important;} .dark .ro:hover{background:#203510!important;}
+.dark .rb{background:#0c1a2e!important;} .dark .rb:hover{background:#0f2244!important;}
+.dark .rorange{background:#2c1a00!important;} .dark .rorange:hover{background:#3a2200!important;}
+.dark tbody tr:hover{background:#263348;}
+.dark .chip{border-color:#475569;}
+.dark .chip.pos{color:#fb923c;}
+.dark .chip.neg{color:#4ade80;}
+.dark .chip.zer{color:#94a3b8;}
+.dark .b-sp{background:#14281f;color:#4ade80;}
+.dark .b-pr{background:#2c1a00;color:#fb923c;}
+.dark .b-ex{background:#1e0a3a;color:#c084fc;}
+.dark .b-vd{background:#2c1518;color:#f87171;}
+.dark .b-ot{background:#1e293b;color:#94a3b8;}
+.dark .floating-total{background:rgba(15,23,42,.97);}
+.dark #toast{background:#1e293b;border:1px solid #334155;}
+.dark .desc-text{color:#94a3b8;}
+.dark .irow > .cell-id,.dark .item-row > .cell-id{color:#94a3b8;}
+.dark .irow > .cell-name,.dark .item-row > .cell-name{color:#e2e8f0;}
+.dark thead th{background:#263348;color:#94a3b8;}
+.dark tbody tr{border-bottom-color:#334155;}
+.dark .act-row td{background:#2c2700!important;}
+.dark .act-row input[type=text],.dark .act-row input[type=number]{background:#1e293b;color:#e2e8f0;border-color:#854d0e;}
+.dark .card-title{color:#e2e8f0;}
+/* dark mode button */
+.btn-dark{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.22);padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s;}
+.btn-dark:hover{background:rgba(255,255,255,.18);}
+.btn-dark.on{background:#1d4ed8;border-color:#3b82f6;color:#dbeafe;}
+
 </style>
 </head>
 <body>
@@ -267,6 +325,7 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
       <button type="button" class="btn-hdr btn-hdr--ghost" onclick="exportCatalogBackup()">Záloha dát</button>
       <button type="button" class="btn-hdr btn-hdr--ghost" onclick="triggerCatalogImport()">Import dát</button>
       <button type="button" class="btn-hdr btn-hdr--ghost" onclick="openAuditReport()">Audit dát</button>
+      <button type="button" id="btn-dark" class="btn-dark" onclick="toggleDarkMode()" title="Tmavý mód">🌙</button>
       <button type="button" class="btn-hdr btn-hdr--admin" id="btn-admin" onclick="toggleAdminMode()">Admin</button>
       <button type="button" class="btn-pdf" onclick="exportPDF()">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
@@ -6799,8 +6858,11 @@ function normalizeOptItem(it){
 }
 function optNumSortVal(item){
   const raw=String(item && item.num!=null ? item.num : '').trim().replace(',','.');
-  const n=Number(raw);
-  return isNaN(n) ? Number.MAX_SAFE_INTEGER : n;
+  const m = raw.match(/^(\d+(?:\.\d+)?)/);
+  if(m){
+    return parseFloat(m[1]);
+  }
+  return Number.MAX_SAFE_INTEGER;
 }
 function sortOptEntriesByNum(entries){
   return (entries||[]).slice().sort((a,b)=>{
@@ -7036,7 +7098,7 @@ function renderOptCard(h,s,flat) {
 
       const key=resolveGroupLabel(item,group.label);
       const tone=getRowTone(item);
-      const cc=tone==='olive'?'ro':tone==='yellow'?'ry':tone==='blue'?'rb':'';
+      const cc=tone==='olive'?'ro':tone==='yellow'?'ry':tone==='blue'?'rb':tone==='orange'?'rorange':'';
       const pNum=Number(item.p)||0;
       const pc=pNum<0?'neg':pNum===0?'zer':'pos';
       const colorOpts=getItemColorOptions(item);
@@ -7051,7 +7113,13 @@ function renderOptCard(h,s,flat) {
         <div class="cell-name">${isEditing?`<input id="adm-name-${fi}" value="${item.name||''}" style="width:100%;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">`:item.name}</div>
         <div class="badge-slot">${isEditing?`<input id="adm-v-${fi}" value="${item.v||''}" style="width:92px;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">`:`<span class="badge ${getBadge(item.v)}">${item.v||'–'}</span>`}</div>
         <div class="cell-price">${isEditing?`<input id="adm-p-${fi}" type="number" step="0.01" value="${pNum}" style="width:110px;padding:3px 6px;font-size:11px;text-align:right;border:1px solid #cbd5e1;border-radius:5px">`:pNum!==0?`<span class="chip ${pc}">${pNum<0?'– ':'+ '}${f(Math.abs(pNum))} €</span>`:`<span class="chip zer">v cene</span>`}</div>
-        <div class="cdesc">${isEditing?`<div style="display:grid;grid-template-columns:1fr;gap:6px"><textarea id="adm-d-${fi}" style="min-height:42px;padding:4px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">${item.d||''}</textarea><div style="display:flex;gap:6px;flex-wrap:wrap"><input id="adm-c-${fi}" value="${item.c||''}" placeholder="farba riadku: olive/yellow/blue" style="min-width:170px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"><input id="adm-colopts-${fi}" value="${getItemColorOptions(item).join(', ')}" placeholder="voľby farby (Biela, Antracit)" style="min-width:220px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"><input id="adm-sec-${fi}" value="${sectionLabel}" placeholder="sekcia" style="min-width:220px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" onclick="adminSaveInline(${fi})" style="border:1px solid #166534;background:#16a34a;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Uložiť</button><button type="button" onclick="adminCancelInline()" style="border:1px solid #94a3b8;background:#fff;color:#1e293b;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Zrušiť</button><button type="button" onclick="adminDeleteOpt(${fi})" style="border:1px solid #b91c1c;background:#fff;color:#b91c1c;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Vymazať</button></div></div>`:`<div class="desc-text">${item.d}</div>${(checked&&colorOpts.length)?`<div style="margin-top:6px;display:flex;align-items:center;gap:6px"><span style="font-size:10px;color:#334155">Farba:</span><select onchange="updateOptColorChoice(${fi},this.value)" style="font-size:11px;padding:2px 6px;border:1px solid #cbd5e1;border-radius:6px;background:#fff"><option value="">-- vybrať --</option>${colorOpts.map(opt=>`<option value="${String(opt).replace(/"/g,'&quot;')}" ${selectedColor===opt?'selected':''}>${opt}</option>`).join('')}</select></div>`:''}${adminEnabled?`<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap"><button type="button" onclick="adminStartInline(${fi})" title="Upraviť" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">✎</button><button type="button" onclick="adminMoveRow(${fi},-1)" title="Posun hore" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">↑</button><button type="button" onclick="adminMoveRow(${fi},1)" title="Posun dole" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">↓</button></div>`:''}`}</div>
+        <div class="cdesc">${isEditing?`<div style="display:grid;grid-template-columns:1fr;gap:6px"><textarea id="adm-d-${fi}" style="min-height:42px;padding:4px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">${item.d||''}</textarea><div style="display:flex;gap:6px;flex-wrap:wrap"><select id="adm-c-${fi}" style="min-width:170px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">
+              <option value="" ${!item.c?'selected':''}>– žiadna –</option>
+              <option value="olive" ${item.c==='olive'?'selected':''}>🟢 Zelená (olive – v cene / all-incl.)</option>
+              <option value="yellow" ${item.c==='yellow'?'selected':''}>🟡 Žltá (špeciálna / v cene)</option>
+              <option value="blue" ${item.c==='blue'?'selected':''}>🔵 Modrá (dokumentácia)</option>
+              <option value="orange" ${item.c==='orange'?'selected':''}>🟠 Oranžová</option>
+            </select><input id="adm-colopts-${fi}" value="${getItemColorOptions(item).join(', ')}" placeholder="voľby farby (Biela, Antracit)" style="min-width:220px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"><select id="adm-sec-${fi}" style="min-width:220px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">${h.optGroups.map(g=>`<option value="${g.label.replace(/"/g,'&quot;')}" ${g.label===sectionLabel?'selected':''}>${g.label}</option>`).join('')}</select></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" onclick="adminSaveInline(${fi})" style="border:1px solid #166534;background:#16a34a;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Uložiť</button><button type="button" onclick="adminCancelInline()" style="border:1px solid #94a3b8;background:#fff;color:#1e293b;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Zrušiť</button><button type="button" onclick="adminDeleteOpt(${fi})" style="border:1px solid #b91c1c;background:#fff;color:#b91c1c;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Vymazať</button></div></div>`:`<div class="desc-text">${item.d}</div>${(checked&&colorOpts.length)?`<div style="margin-top:6px;display:flex;align-items:center;gap:6px"><span style="font-size:10px;color:#334155">Farba:</span><select onchange="updateOptColorChoice(${fi},this.value)" style="font-size:11px;padding:2px 6px;border:1px solid #cbd5e1;border-radius:6px;background:#fff"><option value="">-- vybrať --</option>${colorOpts.map(opt=>`<option value="${String(opt).replace(/"/g,'&quot;')}" ${selectedColor===opt?'selected':''}>${opt}</option>`).join('')}</select></div>`:''}${adminEnabled?`<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap"><button type="button" onclick="adminStartInline(${fi})" title="Upraviť" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">✎</button><button type="button" onclick="adminMoveRow(${fi},-1)" title="Posun hore" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">↑</button><button type="button" onclick="adminMoveRow(${fi},1)" title="Posun dole" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">↓</button></div>`:''}`}</div>
       </div>`;
 
       if(!buckets[key]) buckets[key]=[];
@@ -7077,7 +7145,11 @@ function renderOptCard(h,s,flat) {
             <span class="pill${flt===f?' on':''}" onclick="setFilter('${f}')">${f==='all'?'Všetky':f==='selected'?'Vybrané <span class=\'cbadge\'>'+selCnt+'</span>':f}</span>
           `).join('')}
         </div>
-        ${adminEnabled?`<div style="margin-left:auto;display:flex;gap:6px"><button type="button" class="btn-hdr btn-hdr--ghost" style="padding:5px 9px;font-size:11px" onclick="adminAddFixedItem()">+ Fixná položka</button></div>`:''}
+        ${adminEnabled?`<div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="btn-hdr btn-hdr--ghost" style="padding:5px 9px;font-size:11px;background:#14532d;color:#fff;border-color:#22c55e" onclick="adminCreateOpt()">+ Nová položka</button>
+          <button type="button" class="btn-hdr btn-hdr--ghost" style="padding:5px 9px;font-size:11px;background:#1d4ed8;color:#fff;border-color:#3b82f6" onclick="adminCreateCategory()">+ Nová kategória</button>
+          <button type="button" class="btn-hdr btn-hdr--ghost" style="padding:5px 9px;font-size:11px;background:#7c3aed;color:#fff;border-color:#a78bfa" onclick="adminRenameCategory()">✎ Premenov. kategóriu</button>
+        </div>`:''}
       </div>
       <div class="legend">
         <span class="ld"><span class="ldot" style="background:var(--c-olive-bg);border:1.5px solid var(--c-olive-bd)"></span>All-Inclusive</span>
@@ -7187,18 +7259,24 @@ function adminDeleteOpt(fi){
 }
 function adminMoveRow(fi,dir){
   if(!adminEnabled) return;
-  const ctx=getOptTargetByFlat(fi);
-  if(!ctx) return;
-  const {h,gi,ii}=ctx;
-  const arr=(h.optGroups[gi]&&h.optGroups[gi].items)||[];
-  const ni=ii+Number(dir||0);
-  if(ni<0||ni>=arr.length){
-    showToast('Položku už ďalej neposuniete.');
+  const h=getH(), flat=buildFlat(h);
+  const it1=flat[fi], it2=flat[fi+dir];
+  if(!it1 || !it2 || it1.gi !== it2.gi){
+    showToast('Položku už ďalej neposuniete (narazila na koniec kategórie).');
     return;
   }
-  const tmp=arr[ii];
-  arr[ii]=arr[ni];
-  arr[ni]=tmp;
+  const group=h.optGroups[it1.gi];
+  const raw1=group.items[it1.ii];
+  const raw2=group.items[it2.ii];
+  const tmpNum=raw1.num;
+  raw1.num=raw2.num;
+  raw2.num=tmpNum;
+  
+  // Tiež ich prehodíme v poli
+  const tmpItem=group.items[it1.ii];
+  group.items[it1.ii]=group.items[it2.ii];
+  group.items[it2.ii]=tmpItem;
+
   saveCatalogOverride('admin-move-row');
   rerenderOpt();
   updateTotals();
@@ -7372,6 +7450,95 @@ function adminAddFixedItem(){
 }
 
 // ── Action ──────────────────────────────────────────────
+
+function adminCreateOpt(){
+  if(!adminEnabled) return;
+  const h=getH();
+  if(!h.optGroups || !h.optGroups.length) h.optGroups=[{label:'Nová sekcia', items:[]}];
+  const gi = 0; // target first group default
+  let numInt = 999;
+  if(h.optGroups[gi].items.length) {
+    numInt = h.optGroups[gi].items.length + 400; 
+  }
+  const newItem = {
+    num: String(numInt),
+    name: 'Nová položka',
+    v: 'VD',
+    p: 0,
+    c: '',
+    d: ''
+  };
+  h.optGroups[gi].items.unshift(newItem);
+  
+  const flat = buildFlat(h);
+  const matchingFi = flat.findIndex(it => it.gi === gi && it.num === String(numInt));
+  if(matchingFi >= 0){
+    adminInlineFi = matchingFi;
+  }
+  
+  saveCatalogOverride('admin-create');
+  rerenderOpt();
+  updateTotals();
+  showToast('Položka vytvorená a otvorená na úpravu.');
+}
+
+
+// ── Dark Mode ────────────────────────────────────────────
+let darkEnabled = false;
+function toggleDarkMode(){
+  darkEnabled = !darkEnabled;
+  document.documentElement.classList.toggle('dark', darkEnabled);
+  const btn = document.getElementById('btn-dark');
+  if(btn){
+    btn.textContent = darkEnabled ? '☀️' : '🌙';
+    btn.classList.toggle('on', darkEnabled);
+  }
+  try{ localStorage.setItem('bau_dark', darkEnabled?'1':'0'); }catch(e){}
+}
+function initDarkMode(){
+  try{
+    const saved = localStorage.getItem('bau_dark');
+    if(saved === '1'){ darkEnabled = true; document.documentElement.classList.add('dark'); const btn=document.getElementById('btn-dark'); if(btn){btn.textContent='☀️';btn.classList.add('on');} }
+  }catch(e){}
+}
+
+// ── Admin: Nová kategória ────────────────────────────────
+function adminCreateCategory(){
+  if(!adminEnabled) return;
+  const h = getH();
+  const name = prompt('Názov novej kategórie (napr. 🏠 Moja kategória):','');
+  if(!name || !name.trim()) return;
+  const label = name.trim();
+  if(h.optGroups.find(g=>g.label===label)){
+    showToast('Kategória s týmto názvom už existuje.');
+    return;
+  }
+  h.optGroups.push({label, items:[]});
+  saveCatalogOverride('admin-create-cat');
+  rerenderOpt();
+  showToast('Kategória vytvorená: ' + label);
+}
+
+// ── Admin: Premenovanie kategórie ───────────────────────
+function adminRenameCategory(){
+  if(!adminEnabled) return;
+  const h = getH();
+  if(!h.optGroups || !h.optGroups.length){ showToast('Žiadne kategórie.'); return; }
+  const labels = h.optGroups.map((g,i)=> (i+1)+'. '+g.label).join('\n');
+  const idxStr = prompt('Ktorú kategóriu chcete premenovať? Zadajte číslo:\n' + labels, '1');
+  if(idxStr === null) return;
+  const idx = parseInt(idxStr) - 1;
+  if(isNaN(idx) || idx < 0 || idx >= h.optGroups.length){ showToast('Neplatný výber.'); return; }
+  const oldLabel = h.optGroups[idx].label;
+  const newLabel = prompt('Nový názov kategórie:', oldLabel);
+  if(newLabel === null || !newLabel.trim()) return;
+  if(h.optGroups.find((g,i)=>i!==idx && g.label===newLabel.trim())){ showToast('Kategória s týmto názvom už existuje.'); return; }
+  h.optGroups[idx].label = newLabel.trim();
+  saveCatalogOverride('admin-rename-cat');
+  rerenderOpt();
+  showToast('Kategória premenovaná na: ' + newLabel.trim());
+}
+
 function renderActCard(s) {
   const rows = s.actionRows.map((r,i)=>`
     <tr class="act-row">
@@ -7404,10 +7571,10 @@ function removeAR(i){const r=getS().actionRows;r.splice(i,1);if(!r.length)r.push
 function updateAR(i,k,v){getS().actionRows[i][k]=k==='amount'?(parseFloat(v)||0):v;updateTotals();}
 function renderCustomRows(s){
   return (s.customRows||[]).map((r,i)=>`
-    <tr style="background:#f8fbff;border-bottom:1px solid #e8f0fb;">
+    <tr class="rorange" style="border-bottom:1px solid #fed7aa;">
       <td style="width:38px;text-align:center"><button onclick="removeCR(${i})" style="background:#c7241d;color:#fff;border:none;width:22px;height:22px;border-radius:50%;font-size:14px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;margin:0 auto">×</button></td>
-      <td><input type="text" placeholder="Popis individuálnej zmeny..." value="${r.desc||''}" oninput="updateCR(${i},'desc',this.value)" style="border:1.5px solid #c8daf5;border-radius:6px;padding:5px 9px;font-size:12px;font-family:inherit;outline:none;background:#fff;width:100%"></td>
-      <td style="text-align:right;width:145px"><input type="number" step="0.01" placeholder="0" value="${r.price||''}" oninput="updateCR(${i},'price',this.value)" style="border:1.5px solid #c8daf5;border-radius:6px;padding:5px 9px;font-size:12px;font-family:inherit;outline:none;background:#fff;width:120px;text-align:right"></td>
+      <td><input type="text" placeholder="Popis individuálnej zmeny..." value="${r.desc||''}" oninput="updateCR(${i},'desc',this.value)" style="border:1.5px solid #fb923c;border-radius:6px;padding:5px 9px;font-size:12px;font-family:inherit;outline:none;background:#fff8f0;width:100%"></td>
+      <td style="text-align:right;width:145px"><input type="number" step="0.01" placeholder="0" value="${r.price||''}" oninput="updateCR(${i},'price',this.value)" style="border:1.5px solid #fb923c;border-radius:6px;padding:5px 9px;font-size:12px;font-family:inherit;outline:none;background:#fff8f0;width:120px;text-align:right"></td>
     </tr>`).join('');
 }
 function addCR(){getS().customRows.push({desc:'',price:0});rerenderCustom();}
