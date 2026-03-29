@@ -40,6 +40,8 @@ button:focus-visible,.nav-item:focus-visible,.htab:focus-visible,.pill:focus-vis
 .btn-hdr{border:none;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
 .btn-hdr--ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.22);}
 .btn-hdr--ghost:hover{background:rgba(255,255,255,.2);}
+.btn-hdr--admin{background:#0f172a;color:#fff;border:1px solid rgba(255,255,255,.25);}
+.btn-hdr--admin.on{background:#14532d;border-color:#22c55e;color:#dcfce7;}
 .btn-pdf{background:var(--c-olive);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;transition:all .18s;}
 .btn-pdf:hover{background:var(--c-olive2);transform:translateY(-1px);}
 .price-bar{display:flex;align-items:center;gap:0;padding:0 28px;background:rgba(255,255,255,.04);overflow-x:auto;}
@@ -106,6 +108,11 @@ button:focus-visible,.nav-item:focus-visible,.htab:focus-visible,.pill:focus-vis
 .mob-sticky .mob-val{font-size:18px;font-weight:800;color:#d9f99d;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.35);line-height:1.2;}
 .mob-sticky .btn-mob-pdf{background:linear-gradient(180deg,#8bc53a 0%,var(--c-olive) 45%,#5a8a1a 100%);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;touch-action:manipulation;box-shadow:0 2px 8px rgba(0,0,0,.2);}
 .mob-sticky .btn-mob-pdf:active{opacity:.92;}
+.floating-total{position:fixed;right:14px;bottom:18px;z-index:260;background:rgba(15,23,42,.94);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:8px 12px;display:none;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.28);}
+.floating-total.show{display:flex;}
+.floating-total .lbl{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;}
+.floating-total .val{font-size:17px;font-weight:800;color:#86efac;}
+.floating-total button{border:none;border-radius:7px;padding:6px 10px;background:#334155;color:#fff;font-size:11px;font-weight:700;cursor:pointer;}
 .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;color:#fff;cursor:pointer;user-select:none;}
 .sec-hdr:hover{filter:brightness(1.08);}
@@ -147,6 +154,7 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
 .rr{background:var(--c-red-bg)!important;} .rr:hover{background:#ffe4e4!important;}
 .ry{background:var(--c-yellow-bg)!important;} .ry:hover{background:#fff6c0!important;}
 .ro{background:var(--c-olive-bg)!important;} .ro:hover{background:#e4f5cc!important;}
+.rb{background:#eaf4ff!important;} .rb:hover{background:#dbeafe!important;}
 .grp-hdr td{background:#edf2fa!important;padding:5px 10px!important;font-size:10px!important;font-weight:700!important;color:var(--c-primary)!important;text-transform:uppercase;letter-spacing:.7px;border-top:2px solid #d0dae8!important;}
 
 /* CHECKBOX */
@@ -234,6 +242,7 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
   .grp-hdr-row{padding:5px 8px;font-size:9px!important;}
   .mob-sticky{display:flex;padding:9px 10px;}
   .mob-sticky .mob-val{font-size:17px;}
+  .floating-total{display:none!important;}
   #toast{bottom:calc(76px + env(safe-area-inset-bottom,0px));right:12px;left:auto;max-width:calc(100vw - 24px);}
   .tgrid{grid-template-columns:1fr;}
 }
@@ -255,6 +264,10 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
     <div class="hdr-actions">
       <button type="button" class="btn-hdr btn-hdr--ghost" onclick="resetCurrentHouse()">Obnoviť projekt</button>
       <button type="button" class="btn-hdr btn-hdr--ghost" onclick="copySummary()">Kopírovať súhrn</button>
+      <button type="button" class="btn-hdr btn-hdr--ghost" onclick="exportCatalogBackup()">Záloha dát</button>
+      <button type="button" class="btn-hdr btn-hdr--ghost" onclick="triggerCatalogImport()">Import dát</button>
+      <button type="button" class="btn-hdr btn-hdr--ghost" onclick="openAuditReport()">Audit dát</button>
+      <button type="button" class="btn-hdr btn-hdr--admin" id="btn-admin" onclick="toggleAdminMode()">Admin</button>
       <button type="button" class="btn-pdf" onclick="exportPDF()">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
       Exportovať PDF
@@ -281,6 +294,8 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
     <div class="nav-item" onclick="scrollTo('sec-opt')">⭐ Voliteľná výbava <span class="nbadge" id="nb-opt">0</span></div>
     <div class="nav-item" onclick="scrollTo('sec-act')">🎯 Akciová zľava</div>
     <div class="nav-item" onclick="scrollTo('sec-totals')">💰 Rekapitulácia</div>
+    <div class="nav-item" onclick="setAllSections(true)">⬇️ Rozbaliť všetko</div>
+    <div class="nav-item" onclick="setAllSections(false)">⬆️ Zbaliť všetko</div>
   </aside>
 
   <div class="content" id="content-area">
@@ -288,6 +303,14 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
   </div>
 </div>
 <div id="toast"></div>
+<input type="file" id="catalog-import-input" accept="application/json" style="display:none" onchange="handleCatalogImport(event)">
+<div class="floating-total" id="floating-total">
+  <div>
+    <div class="lbl">Konečná cena s DPH</div>
+    <div class="val" id="floating-total-val">–</div>
+  </div>
+  <button type="button" onclick="scrollTo('sec-totals')">Rekapitulácia</button>
+</div>
 <div class="mob-sticky" id="mob-sticky" aria-label="Rýchle akcie">
   <div>
     <div class="mob-lbl">Celková cena s DPH</div>
@@ -806,7 +829,7 @@ const HOUSES = [
         {num:2,name:'Fasádna omietka – voliteľná farba',v:'premium',p:1200,d:'BAUMIT akrylátová škrabaná 2mm – voliteľná farba',c:''},
         {num:3,name:'Fasádna omietka – bielo-šedá kombinácia',v:'stand. plus',p:1700,d:'BAUMIT akrylátová škrabaná 2mm – kombinácia bielo-šedá',c:''},
         {num:4,name:'Podhľad stropu – Q2 prevedenie',v:'stand. plus',p:1000,d:'Protipožiarny sadrokartón, 2× biely náter, Q2 prevedenie',c:''},
-        {num:'4a',name:'Podhľad stropu – zníženie CD profilom',v:'premium',p:2000,d:'Zníženie stropu CD profilom',c:''},
+        {num:'4a',name:'Podhľad stropu (All-Inclusive)',v:'stand. plus',p:0,d:'Protipožiarny sadrokartón – platí len pre All Inclusive',c:'olive'},
         {num:5,name:'Strešná krytina – škridplech UNI2 matná',v:'stand. plus',p:500,d:'Veľkoplošná, škridplech, 15 rokov záruka, UNI 2 matná',c:''},
         {num:8,name:'Strešné zvody farebné',v:'premium',p:350,d:'KJG, 2× zvod – vo farbe strešnej krytiny',c:''},
       ]},
@@ -893,16 +916,16 @@ const HOUSES = [
         {num:144,name:'Zľava doprava – ALL INCLUSIVE',v:'VD',p:-1700,d:'Zľava na dopravu – ALL INCLUSIVE',c:'olive'},
       ]},
       {label:'📄 Projektová dokumentácia a povolenia',items:[
-        {num:116,name:'Stavebné povolenie',v:'VD',p:850,d:'Kompletné zabezpečenie pre stavebné pozemky',c:''},
+        {num:116,name:'Stavebné povolenie',v:'VD',p:0,d:'Kompletné zabezpečenie pre stavebné pozemky',c:'olive'},
         {num:117,name:'Kolaudácia stavby',v:'VD',p:500,d:'Kompletné zabezpečenie (bez geometrického plánu ku kolaudácii)',c:''},
-        {num:118,name:'Projekt. dokum. – katalógový 2 paré',v:'VD',p:690,d:'RD Family Classic 5i, k stavebnému konaniu 2 paré.',c:''},
+        {num:118,name:'Projekt. dokum. – katalógový 2 paré',v:'VD',p:0,d:'RD Family Classic 5i, k stavebnému konaniu 2 paré.',c:'olive'},
         {num:124,name:'Statický posudok',v:'VD',p:125,d:'Projekt statického posúdenia stavby.',c:''},
         {num:125,name:'Zákres širších vzťahov',v:'VD',p:100,d:'Do katastrálnej mapy 1:1000 + spevnené plochy.',c:''},
-        {num:126,name:'Projekty IS komplet',v:'VD',p:400,d:'Projekty IS (el. energia, voda, kanalizácia) + umiestnenie – komplet',c:''},
-        {num:133,name:'Protokol odbornej skúšky el.',v:'VD',p:170,d:'Protokol o odbornej skúške el. zariadenia',c:''},
-        {num:135,name:'Energetický certifikát ku kolaudácii',v:'VD',p:220,d:'Energetický certifikát ku kolaudácii',c:''},
-        {num:136,name:'Poistenie stavby',v:'VD',p:200,d:'Kompletné zabezpečenie (pri nepoistení zodpovedá klient)',c:''},
-        {num:137,name:'Vývoz stavebného odpadu (2t)',v:'VD',p:175,d:'Kontajner, odvoz stavebného odpadu, 2 tony',c:''},
+        {num:126,name:'Projekty IS komplet',v:'VD',p:0,d:'Projekty IS (el. energia, voda, kanalizácia) + umiestnenie – komplet',c:'olive'},
+        {num:133,name:'Protokol odbornej skúšky el.',v:'VD',p:0,d:'Protokol o odbornej skúške el. zariadenia',c:'olive'},
+        {num:135,name:'Energetický certifikát ku kolaudácii',v:'VD',p:0,d:'Energetický certifikát ku kolaudácii',c:'olive'},
+        {num:136,name:'Poistenie stavby',v:'VD',p:0,d:'Kompletné zabezpečenie (pri nepoistení zodpovedá klient)',c:'olive'},
+        {num:137,name:'Vývoz stavebného odpadu (2t)',v:'VD',p:0,d:'Kontajner, odvoz stavebného odpadu, 2 tony',c:'olive'},
       ]},
       {label:'💶 Platby, garancie a ostatné',items:[
         {num:138,name:'Poplatok – hypotéka/individ. financovanie',v:'VD',p:1700,d:'Individuálne financovanie (hypotéka a pod.)',c:''},
@@ -6286,6 +6309,76 @@ const HOUSES = [
 }
 ];
 
+const CATALOG_VERSION=1;
+const CATALOG_LS_KEY='bau-houses-catalog-v1';
+const BASE_HOUSES=JSON.parse(JSON.stringify(HOUSES));
+
+function setHousesData(next){
+  if(!Array.isArray(next)||!next.length) return false;
+  HOUSES.splice(0,HOUSES.length,...next);
+  return true;
+}
+function loadCatalogOverride(){
+  try{
+    const raw=localStorage.getItem(CATALOG_LS_KEY);
+    if(!raw) return;
+    const payload=JSON.parse(raw);
+    if(!payload || payload.version!==CATALOG_VERSION || !Array.isArray(payload.houses)) return;
+    setHousesData(payload.houses);
+  }catch(e){
+    console.warn('Catalog override load failed',e);
+  }
+}
+function saveCatalogOverride(source){
+  try{
+    const payload={
+      version:CATALOG_VERSION,
+      source:source||'manual',
+      savedAt:new Date().toISOString(),
+      houses:HOUSES
+    };
+    localStorage.setItem(CATALOG_LS_KEY,JSON.stringify(payload));
+  }catch(e){
+    console.warn('Catalog override save failed',e);
+  }
+}
+function exportCatalogBackup(){
+  const payload={
+    version:CATALOG_VERSION,
+    exportedAt:new Date().toISOString(),
+    houses:HOUSES
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`dom-snov-backup-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  showToast('Záloha dát bola stiahnutá.');
+}
+function triggerCatalogImport(){
+  const inp=document.getElementById('catalog-import-input');
+  if(inp) inp.click();
+}
+async function handleCatalogImport(ev){
+  const file=ev && ev.target && ev.target.files && ev.target.files[0];
+  if(!file) return;
+  try{
+    const txt=await file.text();
+    const payload=JSON.parse(txt);
+    if(!payload || !Array.isArray(payload.houses)) throw new Error('Invalid format');
+    if(!setHousesData(payload.houses)) throw new Error('Invalid houses payload');
+    saveCatalogOverride('import');
+    showToast('Import prebehol úspešne. Obnovujem stránku...');
+    setTimeout(()=>window.location.reload(),350);
+  }catch(e){
+    showToast('Import zlyhal: neplatný JSON formát.');
+  }finally{
+    ev.target.value='';
+  }
+}
+loadCatalogOverride();
+
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
@@ -6293,6 +6386,8 @@ let activeHouseIdx = 0;
 const houseState = HOUSES.map(h => ({
   stdState: h.standard.map(i => i.std),
   optState: {},
+  optChoiceState: {},
+  choicePrefs: {},
   actionRows: [{desc:'',amount:0}],
   customRows: [{desc:'',price:0}],
   filter:'all', search:'', stdSearch:'',
@@ -6304,12 +6399,41 @@ const LS_KEY = 'bau-konfig-v1';
 let persistTimer = 0;
 let optSearchTimer = 0;
 let stdSearchTimer = 0;
+let adminEnabled = false;
+let adminInlineFi = -1;
+
+function setAdminUi(){
+  const b=document.getElementById('btn-admin');
+  if(!b) return;
+  b.classList.toggle('on',adminEnabled);
+  b.textContent=adminEnabled?'Admin ON':'Admin';
+}
+function toggleAdminMode(){
+  if(adminEnabled){
+    adminEnabled=false;
+    setAdminUi();
+    rerenderOpt();
+    showToast('Admin režim vypnutý.');
+    return;
+  }
+  const p=prompt('Zadajte heslo pre admin režim:');
+  if(p!=='Filip'){
+    showToast('Nesprávne heslo.');
+    return;
+  }
+  adminEnabled=true;
+  setAdminUi();
+  rerenderOpt();
+  showToast('Admin režim zapnutý.');
+}
 
 function freshStateForHouse(i) {
   const h = HOUSES[i];
   return {
     stdState: h.standard.map(item => item.std),
     optState: {},
+    optChoiceState: {},
+    choicePrefs: {},
     actionRows: [{desc:'',amount:0}],
     customRows: [{desc:'',price:0}],
     filter: 'all',
@@ -6337,6 +6461,8 @@ function loadFromStorage() {
         t.actionRows = snap.actionRows.map(r => ({ desc: r.desc || '', amount: parseFloat(r.amount) || 0 }));
       if (Array.isArray(snap.customRows) && snap.customRows.length)
         t.customRows = snap.customRows.map(r => ({ desc: r.desc || '', price: parseFloat(r.price) || 0 }));
+      if (snap.optChoiceState && typeof snap.optChoiceState === 'object') t.optChoiceState = { ...snap.optChoiceState };
+      if (snap.choicePrefs && typeof snap.choicePrefs === 'object') t.choicePrefs = { ...snap.choicePrefs };
       if (snap.filter) t.filter = snap.filter;
       if (typeof snap.search === 'string') t.search = snap.search;
       if (typeof snap.stdSearch === 'string') t.stdSearch = snap.stdSearch;
@@ -6353,6 +6479,8 @@ function persistNow() {
       houses: houseState.map(s => ({
         stdState: s.stdState,
         optState: s.optState,
+        optChoiceState: s.optChoiceState || {},
+        choicePrefs: s.choicePrefs || {},
         actionRows: s.actionRows,
         customRows: s.customRows,
         filter: s.filter,
@@ -6416,9 +6544,284 @@ function getS() { return houseState[activeHouseIdx]; }
 // ═══════════════════════════════════════════════════════════
 // BUILD FLAT OPT LIST
 // ═══════════════════════════════════════════════════════════
+const HEATING_GROUP_LABEL='🔥 Vykurovanie a rekuperácia';
+const DOCS_GROUP_LABEL='📄 Projektová dokumentácia a povolenia';
+const PAYMENTS_GROUP_LABEL='💶 Platby, garancie a ostatné';
+const GROUP_ORDER_III=[
+  '🏚 Fasáda a strecha',
+  '🪟 Okná a parapety',
+  '🚪 Dvere',
+  '🪵 Podlahy',
+  '🔥 Vykurovanie a rekuperácia',
+  '⚡ Elektroinštalácie, zásuvky a osvetlenie',
+  '🛁 Kúpeľňa a sanita',
+  '🔥 Komín a krb',
+  '🏗 Konštrukcia a predĺženie domu',
+  '🔌 Základy a prípojky IS',
+  '🚛 Doprava',
+  '📄 Projektová dokumentácia a povolenia',
+  '💶 Platby, garancie a ostatné'
+];
+
+function normDiacritics(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+function isEmptyOptRow(it){
+  const name=String((it&&it.name!=null)?it.name:'').trim();
+  const desc=String((it&&it.d!=null)?it.d:'').trim();
+  const p=Number((it&&it.p!=null)?it.p:0);
+  return (!name && !desc && (isNaN(p)?0:p)===0);
+}
+function isHeatingItem(it){
+  const txt=normDiacritics(`${it.name||''} ${it.d||''} ${it.v||''}`);
+  return /(kuren|kurenie|vykurov|rekuper|termostat|ecoflex|daikin|tc|tcz|t\.?c\.?|tč|klimatiz)/.test(txt);
+}
+function isMandatoryDocItem(it){
+  const txt=normDiacritics(`${it.name||''} ${it.d||''}`);
+  return /(staticky posudok|zakres sirsich vztahov|projekt poziarnej ochrany)/.test(txt);
+}
+function isAllInclusiveItem(it){
+  const txt=normDiacritics(`${it.name||''} ${it.d||''} ${it.v||''}`);
+  return /all[\s\-_]*inclusive/.test(txt);
+}
+function isExcludedItem(house,item){
+  if(!house || !item) return false;
+  if(house.id==='stilo5i'){
+    const n=Number(item.num);
+    if(!isNaN(n) && n>=153 && n<=159) return true;
+  }
+  return false;
+}
+function getRowTone(item){
+  if(isMandatoryDocItem(item)) return 'blue';
+  if(isAllInclusiveItem(item)) return 'olive';
+  return item && item.c ? item.c : '';
+}
+
+// "Zelené v cene" položky zo `Stilo Absolut` (c:'olive' + p:0) automaticky prenášame do všetkých domov.
+const OLIVE_ZERO_MAP=(()=>{
+  const abs=HOUSES.find(h=>h && h.id==='absolut');
+  const map={};
+  if(!abs || !abs.optGroups) return map;
+  abs.optGroups.forEach(g=>{
+    (g.items||[]).forEach(it=>{
+      const pNum=Number(it && it.p!=null ? it.p : 0);
+      if((it && it.c==='olive') && (isNaN(pNum)?0:pNum)===0){
+        const k=String(it.num);
+        map[k]={
+          num:it.num,
+          name:it.name,
+          v:it.v,
+          p:0,
+          d:it.d,
+          c:'olive'
+        };
+      }
+    });
+  });
+  return map;
+})();
+
+const ABSOLUT_GROUP_BY_NUM=(()=>{
+  const abs=HOUSES.find(h=>h && h.id==='absolut');
+  const m={};
+  if(!abs||!abs.optGroups) return m;
+  abs.optGroups.forEach(g=>{
+    (g.items||[]).forEach(it=>{ m[String(it.num)]=g.label; });
+  });
+  return m;
+})();
+
+const ABSOLUT_GROUP_BY_NAME=(()=>{
+  const abs=HOUSES.find(h=>h && h.id==='absolut');
+  const m={};
+  if(!abs||!abs.optGroups) return m;
+  abs.optGroups.forEach(g=>{
+    (g.items||[]).forEach(it=>{
+      const key=normDiacritics(it.name||'').trim();
+      if(key) m[key]=g.label;
+    });
+  });
+  return m;
+})();
+
+const MANDATORY_DOC_TEMPLATES=[
+  {num:125,name:'Statický posudok', v:'VD', p:125, d:'Projekt statického posúdenia stavby.', c:'blue'},
+  {num:126,name:'Zákres širších vzťahov', v:'VD', p:100, d:'Do katastrálnej mapy 1:1000 + spevnené plochy.', c:'blue'},
+  {num:132,name:'Projekt požiarnej ochrany', v:'VD', p:75, d:'Projekt požiarnej ochrany', c:'blue'}
+];
+const MANDATORY_DOC_CANON={
+  statickyPosudok:'Statický posudok',
+  zakresSirsich:'Zákres širších vzťahov',
+  poziarnaOchrana:'Projekt požiarnej ochrany'
+};
+
+function mandatoryDocKind(it){
+  const txt=normDiacritics(`${it&&it.name||''} ${it&&it.d||''}`);
+  if(/staticky posudok/.test(txt)) return 'statickyPosudok';
+  if(/zakres\s+sirsich\s+vztah/.test(txt) || /zakres\s+sisrisch\s+vztaho/.test(txt)) return 'zakresSirsich';
+  if(/projekt\s+poziarnej\s+ochrany/.test(txt)) return 'poziarnaOchrana';
+  return '';
+}
+function normalizeMandatoryDocText(it){
+  const kind=mandatoryDocKind(it);
+  if(!kind) return it;
+  const canonName=MANDATORY_DOC_CANON[kind];
+  const tpl=MANDATORY_DOC_TEMPLATES.find(t=>mandatoryDocKind(t)===kind);
+  return {
+    ...it,
+    name:canonName,
+    d:tpl ? tpl.d : it.d
+  };
+}
+
+function resolveGroupLabel(item, defaultLabel){
+  if(isAllInclusiveItem(item)) return PAYMENTS_GROUP_LABEL;
+  const nameKey=normDiacritics(item && item.name || '').trim();
+  if(nameKey && ABSOLUT_GROUP_BY_NAME[nameKey]) return ABSOLUT_GROUP_BY_NAME[nameKey];
+  const numKey=String(item && item.num!=null ? item.num : '');
+  if(numKey && ABSOLUT_GROUP_BY_NUM[numKey]) return ABSOLUT_GROUP_BY_NUM[numKey];
+  if(isHeatingItem(item)) return HEATING_GROUP_LABEL;
+  return defaultLabel;
+}
+
+function harmonizeHouseOptGroups(house){
+  if(!house || !Array.isArray(house.optGroups)) return;
+  const rows=[];
+  house.optGroups.forEach(g=>{
+    (g.items||[]).forEach(it=>rows.push({ ...normalizeMandatoryDocText(it), _srcLabel:g.label }));
+  });
+  const hasManual=rows.some(it=>!!it.__manual);
+  if(hasManual){
+    // Pri manuálne upravovaných dátach v admin režime neprepisujeme kategorizáciu ani ceny.
+    house.optGroups=(house.optGroups||[]).map(g=>({
+      ...g,
+      items:(g.items||[]).filter(it=>!isEmptyOptRow(it))
+    }));
+    return;
+  }
+
+  // odstránime prázdne placeholder riadky
+  let items=rows.filter(it=>!isEmptyOptRow(it));
+
+  // požiadavka: stilo5i vyhodiť 153-159
+  if(house.id==='stilo5i'){
+    items=items.filter(it=>{
+      const n=Number(it.num);
+      return isNaN(n) || n<153 || n>159;
+    });
+  }
+
+  // Upsert povinných dokumentov:
+  // - odstránime všetky existujúce varianty (aj typo)
+  // - vložíme presne 3 kanonické položky (bez duplicit a bez chýbania)
+  items=items.filter(it=>!mandatoryDocKind(it));
+  MANDATORY_DOC_TEMPLATES.forEach(t=>{
+    items.push({
+      num:t.num,
+      name:t.name,
+      v:t.v,
+      p:t.p,
+      d:t.d,
+      c:t.c,
+      _srcLabel:DOCS_GROUP_LABEL
+    });
+  });
+
+  // normalizujeme farby/pravidlá a zatriedime podľa Stilo Absolut
+  const grouped={};
+  const ensureGroup=(lbl)=>{ if(!grouped[lbl]) grouped[lbl]=[]; };
+  items.forEach(orig=>{
+    const it=normalizeOptItem(orig);
+    const label=resolveGroupLabel(it, orig._srcLabel||'');
+    ensureGroup(label);
+    grouped[label].push(it);
+  });
+
+  const knownOrder=GROUP_ORDER_III.filter(lbl=>grouped[lbl] && grouped[lbl].length);
+  const extraOrder=Object.keys(grouped).filter(lbl=>!GROUP_ORDER_III.includes(lbl) && grouped[lbl].length);
+  house.optGroups=[...knownOrder,...extraOrder].map(label=>({
+    label,
+    items: grouped[label].map(({_srcLabel,...rest})=>rest)
+  }));
+}
+
+function harmonizeAllHouses(){
+  HOUSES.forEach(harmonizeHouseOptGroups);
+}
+
+function validateHouseData(){
+  const issues=[];
+  HOUSES.forEach(h=>{
+    const seenNums=new Set();
+    const mandatoryKinds=new Set();
+    (h.optGroups||[]).forEach(g=>{
+      (g.items||[]).forEach(it=>{
+        const numKey=String(it.num);
+        if(seenNums.has(numKey)) issues.push(`[${h.id}] duplicate num in opt: ${numKey}`);
+        seenNums.add(numKey);
+        if(isEmptyOptRow(it)) issues.push(`[${h.id}] empty opt row: num=${numKey}`);
+        if((it.name||'').trim() && !String(it.v||'').trim()) issues.push(`[${h.id}] missing variant: ${numKey} ${it.name}`);
+        const mk=mandatoryDocKind(it);
+        if(mk) mandatoryKinds.add(mk);
+      });
+    });
+    ['statickyPosudok','zakresSirsich','poziarnaOchrana'].forEach(k=>{
+      if(!mandatoryKinds.has(k)) issues.push(`[${h.id}] missing mandatory doc: ${k}`);
+    });
+  });
+  if(issues.length){
+    console.warn('Data validation issues:', issues.slice(0,120));
+  }
+  return issues;
+}
+function openAuditReport(){
+  const issues=validateHouseData();
+  const lines=[
+    `Modelov: ${HOUSES.length}`,
+    `Nálezov: ${issues.length}`,
+    ''
+  ];
+  if(!issues.length) lines.push('Bez chýb. Dáta vyzerajú konzistentne.');
+  else lines.push(...issues.slice(0,120), issues.length>120?`... +${issues.length-120} ďalších`:'');
+  alert(lines.join('\n'));
+}
+
+function normalizeOptItem(it){
+  if(!it) return it;
+  if(it.__manual) return it;
+  const k=String(it.num);
+  const m=OLIVE_ZERO_MAP[k];
+  const base=m ? { ...it, name:m.name, v:m.v, p:m.p, d:m.d, c:m.c } : it;
+  if(isAllInclusiveItem(base)) return { ...base, c:'olive' };
+  if(isMandatoryDocItem(base) && Number(base.p)!==0) return { ...base, c:'blue' };
+  return base;
+}
+function optNumSortVal(item){
+  const raw=String(item && item.num!=null ? item.num : '').trim().replace(',','.');
+  const n=Number(raw);
+  return isNaN(n) ? Number.MAX_SAFE_INTEGER : n;
+}
+function sortOptEntriesByNum(entries){
+  return (entries||[]).slice().sort((a,b)=>{
+    const av=optNumSortVal(a.item), bv=optNumSortVal(b.item);
+    if(av!==bv) return av-bv;
+    const an=String(a.item && a.item.num!=null ? a.item.num : '');
+    const bn=String(b.item && b.item.num!=null ? b.item.num : '');
+    return an.localeCompare(bn,'sk');
+  });
+}
+harmonizeAllHouses();
+validateHouseData();
 function buildFlat(house) {
   const flat = [];
-  house.optGroups.forEach((g,gi) => g.items.forEach((item,ii) => flat.push({...item,gi,ii})));
+  house.optGroups.forEach((g,gi) => {
+    const sorted=sortOptEntriesByNum((g.items||[]).map((item,ii)=>({item,ii})));
+    sorted.forEach(({item,ii})=>{
+      const n=normalizeOptItem(item);
+      flat.push({...n,gi,ii});
+    });
+  });
   return flat;
 }
 
@@ -6579,33 +6982,86 @@ function getBadge(v){
   if(l==='vd') return 'b-vd';
   return 'b-ot';
 }
+function getItemColorOptions(item){
+  if(!item) return [];
+  if(Array.isArray(item.colorOptions)) return item.colorOptions.map(v=>String(v).trim()).filter(Boolean);
+  if(item.choices && Array.isArray(item.choices.farba)) return item.choices.farba.map(v=>String(v).trim()).filter(Boolean);
+  return [];
+}
+function ensureOptChoiceStateForItem(fi,item){
+  const s=getS();
+  const opts=getItemColorOptions(item);
+  if(!opts.length) return;
+  if(!s.optChoiceState[fi]) s.optChoiceState[fi]={};
+  if(!s.optChoiceState[fi].farba){
+    const pref=s.choicePrefs && s.choicePrefs.farba;
+    if(pref && opts.includes(pref)) s.optChoiceState[fi].farba=pref;
+  }
+}
+function updateOptColorChoice(fi,val){
+  const s=getS();
+  if(!s.optChoiceState[fi]) s.optChoiceState[fi]={};
+  s.optChoiceState[fi].farba=val;
+  if(!s.choicePrefs) s.choicePrefs={};
+  if(val) s.choicePrefs.farba=val;
+  schedulePersist();
+}
 function renderOptCard(h,s,flat) {
-  const flt = s.filter, srch = s.search.toLowerCase();
-  const selCnt = Object.values(s.optState).filter(Boolean).length;
-  let tbody = '';
-  h.optGroups.forEach((group,gi) => {
-    let gRows='', gc=0;
-    group.items.forEach((item,ii) => {
-      const fi = flat.findIndex(f=>f.gi===gi&&f.ii===ii);
-      if(fi<0) return;
-      const v=(item.v||'').toLowerCase(), checked=!!s.optState[fi];
+  const flt=s.filter, srch=(s.search||'').toLowerCase();
+  const selCnt=Object.values(s.optState).filter(Boolean).length;
+  const fiByGiIi=new Map(flat.map((it,idx)=>[it.gi+'|'+it.ii,idx]));
+
+  const buckets={}; // label -> array of rowHtml
+
+  h.optGroups.forEach((group,gi)=>{
+    const sorted=sortOptEntriesByNum((group.items||[]).map((item,ii)=>({item,ii})));
+    sorted.forEach(({ii})=>{
+      const fi=fiByGiIi.get(gi+'|'+ii);
+      if(fi==null) return;
+      const item=flat[fi];
+      if(!item) return;
+      if(isExcludedItem(h,item)) return;
+
+      // vyhadzujeme prázdne placeholder riadky
+      if(isEmptyOptRow(item)) return;
+
+      const v=(item.v||'').toLowerCase();
+      const checked=!!s.optState[fi];
       const mf=flt==='all'||(flt==='selected'&&checked)||v===flt.toLowerCase();
-      const ms=!srch||item.name.toLowerCase().includes(srch)||(item.d||'').toLowerCase().includes(srch)||(item.v||'').toLowerCase().includes(srch);
+      const ms=!srch||
+        (item.name||'').toLowerCase().includes(srch)||
+        (item.d||'').toLowerCase().includes(srch)||
+        (item.v||'').toLowerCase().includes(srch);
       if(!mf||!ms) return;
-      gc++;
-      const cc=item.c==='olive'?'ro':item.c==='yellow'?'ry':'';
-      const pc=item.p<0?'neg':item.p===0?'zer':'pos';
-      gRows+=`<div class="irow item-row ${cc}" id="opt-${fi}">
+
+      const key=resolveGroupLabel(item,group.label);
+      const tone=getRowTone(item);
+      const cc=tone==='olive'?'ro':tone==='yellow'?'ry':tone==='blue'?'rb':'';
+      const pNum=Number(item.p)||0;
+      const pc=pNum<0?'neg':pNum===0?'zer':'pos';
+      const colorOpts=getItemColorOptions(item);
+      if(checked) ensureOptChoiceStateForItem(fi,item);
+      const selectedColor=(s.optChoiceState[fi]&&s.optChoiceState[fi].farba)||'';
+      const isEditing=adminEnabled && adminInlineFi===fi;
+      const sectionLabel=group.label||'';
+
+      const rowHtml=`<div class="irow item-row ${cc}" id="opt-${fi}">
         <div class="cchk"><input type="checkbox" class="ichk" ${checked?'checked':''} onchange="toggleOpt(${fi},this)"></div>
-        <div class="cell-id">${item.num}</div>
-        <div class="cell-name">${item.name}</div>
-        <div class="badge-slot"><span class="badge ${getBadge(item.v)}">${item.v||'–'}</span></div>
-        <div class="cell-price">${item.p!==0?`<span class="chip ${pc}">${item.p<0?'– ':'+ '}${f(Math.abs(item.p))} €</span>`:`<span class="chip zer">v cene</span>`}</div>
-        <div class="cdesc"><div class="desc-text">${item.d}</div></div>
+        <div class="cell-id">${isEditing?`<input id="adm-num-${fi}" value="${item.num??''}" style="width:48px;padding:2px 4px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">`:item.num}</div>
+        <div class="cell-name">${isEditing?`<input id="adm-name-${fi}" value="${item.name||''}" style="width:100%;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">`:item.name}</div>
+        <div class="badge-slot">${isEditing?`<input id="adm-v-${fi}" value="${item.v||''}" style="width:92px;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">`:`<span class="badge ${getBadge(item.v)}">${item.v||'–'}</span>`}</div>
+        <div class="cell-price">${isEditing?`<input id="adm-p-${fi}" type="number" step="0.01" value="${pNum}" style="width:110px;padding:3px 6px;font-size:11px;text-align:right;border:1px solid #cbd5e1;border-radius:5px">`:pNum!==0?`<span class="chip ${pc}">${pNum<0?'– ':'+ '}${f(Math.abs(pNum))} €</span>`:`<span class="chip zer">v cene</span>`}</div>
+        <div class="cdesc">${isEditing?`<div style="display:grid;grid-template-columns:1fr;gap:6px"><textarea id="adm-d-${fi}" style="min-height:42px;padding:4px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px">${item.d||''}</textarea><div style="display:flex;gap:6px;flex-wrap:wrap"><input id="adm-c-${fi}" value="${item.c||''}" placeholder="farba riadku: olive/yellow/blue" style="min-width:170px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"><input id="adm-colopts-${fi}" value="${getItemColorOptions(item).join(', ')}" placeholder="voľby farby (Biela, Antracit)" style="min-width:220px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"><input id="adm-sec-${fi}" value="${sectionLabel}" placeholder="sekcia" style="min-width:220px;flex:1;padding:3px 6px;font-size:11px;border:1px solid #cbd5e1;border-radius:5px"></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" onclick="adminSaveInline(${fi})" style="border:1px solid #166534;background:#16a34a;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Uložiť</button><button type="button" onclick="adminCancelInline()" style="border:1px solid #94a3b8;background:#fff;color:#1e293b;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Zrušiť</button><button type="button" onclick="adminDeleteOpt(${fi})" style="border:1px solid #b91c1c;background:#fff;color:#b91c1c;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer">Vymazať</button></div></div>`:`<div class="desc-text">${item.d}</div>${(checked&&colorOpts.length)?`<div style="margin-top:6px;display:flex;align-items:center;gap:6px"><span style="font-size:10px;color:#334155">Farba:</span><select onchange="updateOptColorChoice(${fi},this.value)" style="font-size:11px;padding:2px 6px;border:1px solid #cbd5e1;border-radius:6px;background:#fff"><option value="">-- vybrať --</option>${colorOpts.map(opt=>`<option value="${String(opt).replace(/"/g,'&quot;')}" ${selectedColor===opt?'selected':''}>${opt}</option>`).join('')}</select></div>`:''}${adminEnabled?`<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap"><button type="button" onclick="adminStartInline(${fi})" title="Upraviť" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">✎</button><button type="button" onclick="adminMoveRow(${fi},-1)" title="Posun hore" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">↑</button><button type="button" onclick="adminMoveRow(${fi},1)" title="Posun dole" style="border:1px solid #cbd5e1;background:#fff;color:#1e293b;padding:2px 7px;border-radius:6px;font-size:11px;cursor:pointer">↓</button></div>`:''}`}</div>
       </div>`;
+
+      if(!buckets[key]) buckets[key]=[];
+      buckets[key].push(rowHtml);
     });
-    if(gc>0) tbody+=`<div class="grp-hdr-row">${group.label}</div>${gRows}`;
   });
+
+  const orderedKeys=GROUP_ORDER_III.filter(k=>buckets[k] && buckets[k].length);
+  const restKeys=Object.keys(buckets).filter(k=>!GROUP_ORDER_III.includes(k) && buckets[k] && buckets[k].length);
+  let tbody= [...orderedKeys,...restKeys].map(k=>`<div class="grp-hdr-row">${k}</div>${buckets[k].join('')}`).join('');
   if(!tbody) tbody='<div class="irow item-row" style="width:100%;justify-content:center;text-align:center;border:none;color:var(--c-muted);font-style:italic;padding:16px 8px">Žiadne položky nezodpovedajú filtru.</div>';
   return `<div class="card" id="sec-opt">
     <div class="sec-hdr" style="background:#3a2200" onclick="toggleSec('sb-opt',this)">
@@ -6621,6 +7077,7 @@ function renderOptCard(h,s,flat) {
             <span class="pill${flt===f?' on':''}" onclick="setFilter('${f}')">${f==='all'?'Všetky':f==='selected'?'Vybrané <span class=\'cbadge\'>'+selCnt+'</span>':f}</span>
           `).join('')}
         </div>
+        ${adminEnabled?`<div style="margin-left:auto;display:flex;gap:6px"><button type="button" class="btn-hdr btn-hdr--ghost" style="padding:5px 9px;font-size:11px" onclick="adminAddFixedItem()">+ Fixná položka</button></div>`:''}
       </div>
       <div class="legend">
         <span class="ld"><span class="ldot" style="background:var(--c-olive-bg);border:1.5px solid var(--c-olive-bd)"></span>All-Inclusive</span>
@@ -6655,6 +7112,15 @@ function renderOptCard(h,s,flat) {
 }
 function toggleOpt(fi,el){
   const s=getS(); s.optState[fi]=el.checked;
+  if(el.checked){
+    const h=getH();
+    const flat=buildFlat(h);
+    ensureOptChoiceStateForItem(fi,flat[fi]);
+  }else if(s.optChoiceState && s.optChoiceState[fi]){
+    delete s.optChoiceState[fi];
+  }
+  schedulePersist();
+  rerenderOpt();
   updateTotals();
   const cnt=Object.values(s.optState).filter(Boolean).length;
   document.getElementById('nb-opt').textContent=cnt;
@@ -6670,6 +7136,239 @@ function rerenderOpt(){
   const tmp=document.getElementById('sec-opt');
   if(tmp){const n=document.createElement('div');n.innerHTML=renderOptCard(h,s,flat);tmp.replaceWith(n.firstChild);}
   updateTotals();
+}
+function getOptTargetByFlat(fi){
+  const h=getH();
+  const flat=buildFlat(h);
+  const item=flat[fi];
+  if(!item) return null;
+  const srcGroup=h.optGroups[item.gi];
+  if(!srcGroup || !srcGroup.items || !srcGroup.items[item.ii]) return null;
+  return {h,flat,item,srcGroup,target:srcGroup.items[item.ii],gi:item.gi,ii:item.ii};
+}
+function ensureGroupByLabel(h,label){
+  let gi=h.optGroups.findIndex(g=>g.label===label);
+  if(gi<0){
+    h.optGroups.push({label,items:[]});
+    gi=h.optGroups.length-1;
+  }
+  return gi;
+}
+function moveOptItemToGroup(h,fromGi,fromIi,toLabel){
+  if(fromGi==null||fromIi==null) return null;
+  const src=h.optGroups[fromGi];
+  if(!src||!src.items||!src.items[fromIi]) return null;
+  const [obj]=src.items.splice(fromIi,1);
+  const toGi=ensureGroupByLabel(h,toLabel);
+  h.optGroups[toGi].items.push(obj);
+  return obj;
+}
+function adminStartInline(fi){
+  if(!adminEnabled) return;
+  adminInlineFi=fi;
+  rerenderOpt();
+}
+function adminCancelInline(){
+  adminInlineFi=-1;
+  rerenderOpt();
+}
+function adminDeleteOpt(fi){
+  if(!adminEnabled) return;
+  const ctx=getOptTargetByFlat(fi);
+  if(!ctx) return;
+  const {h,item,gi,ii}=ctx;
+  if(!confirm(`Odstrániť položku "${item.name}"?`)) return;
+  h.optGroups[gi].items.splice(ii,1);
+  adminInlineFi=-1;
+  saveCatalogOverride('admin-del');
+  rerenderOpt();
+  updateTotals();
+  showToast('Položka odstránená.');
+}
+function adminMoveRow(fi,dir){
+  if(!adminEnabled) return;
+  const ctx=getOptTargetByFlat(fi);
+  if(!ctx) return;
+  const {h,gi,ii}=ctx;
+  const arr=(h.optGroups[gi]&&h.optGroups[gi].items)||[];
+  const ni=ii+Number(dir||0);
+  if(ni<0||ni>=arr.length){
+    showToast('Položku už ďalej neposuniete.');
+    return;
+  }
+  const tmp=arr[ii];
+  arr[ii]=arr[ni];
+  arr[ni]=tmp;
+  saveCatalogOverride('admin-move-row');
+  rerenderOpt();
+  updateTotals();
+}
+function adminSaveInline(fi){
+  if(!adminEnabled) return;
+  const ctx=getOptTargetByFlat(fi);
+  if(!ctx) return;
+  const {h,gi,ii}=ctx;
+  const target=h.optGroups[gi]&&h.optGroups[gi].items&&h.optGroups[gi].items[ii];
+  if(!target) return;
+  const numIn=(document.getElementById(`adm-num-${fi}`)||{}).value;
+  const nameIn=(document.getElementById(`adm-name-${fi}`)||{}).value;
+  const vIn=(document.getElementById(`adm-v-${fi}`)||{}).value;
+  const pIn=(document.getElementById(`adm-p-${fi}`)||{}).value;
+  const cIn=(document.getElementById(`adm-c-${fi}`)||{}).value;
+  const dIn=(document.getElementById(`adm-d-${fi}`)||{}).value;
+  const secIn=(document.getElementById(`adm-sec-${fi}`)||{}).value;
+  const colOptsIn=(document.getElementById(`adm-colopts-${fi}`)||{}).value;
+  const pNum=parseFloat(String(pIn||'0').replace(',','.'));
+
+  target.num=String(numIn??'').trim();
+  target.name=String(nameIn??'').trim();
+  target.v=String(vIn??'').trim();
+  target.p=isNaN(pNum)?0:pNum;
+  target.c=String(cIn??'').trim();
+  target.d=String(dIn??'').trim();
+  const colorChoices=String(colOptsIn||'').split(',').map(v=>v.trim()).filter(Boolean);
+  if(colorChoices.length){
+    target.choices=target.choices||{};
+    target.choices.farba=colorChoices;
+  }else if(target.choices && target.choices.farba){
+    delete target.choices.farba;
+    if(!Object.keys(target.choices).length) delete target.choices;
+  }
+  target.__manual=true;
+  if(String(secIn||'').trim() && String(secIn||'').trim()!==(h.optGroups[gi]&&h.optGroups[gi].label)){
+    moveOptItemToGroup(h,gi,ii,String(secIn).trim());
+  }
+  adminInlineFi=-1;
+  saveCatalogOverride('admin-inline-save');
+  rerenderOpt();
+  updateTotals();
+  showToast('Položka upravená.');
+}
+function adminEditOpt(fi){
+  if(!adminEnabled) return;
+  // Legacy prompt editor retained as fallback; default opens inline editor.
+  if(confirm('Otvoriť inline editor priamo v riadku?')){
+    adminStartInline(fi);
+    return;
+  }
+  const ctx=getOptTargetByFlat(fi);
+  if(!ctx) return;
+  const {h,item,gi,ii}=ctx;
+
+  const action=prompt('Admin akcia: edit / move / del','edit');
+  if(action===null) return;
+  const a=String(action).trim().toLowerCase();
+
+  if(a==='del' || a==='delete'){
+    const ok=confirm(`Odstrániť položku "${item.name}"?`);
+    if(!ok) return;
+    h.optGroups[gi].items.splice(ii,1);
+    saveCatalogOverride('admin-del');
+    rerenderOpt();
+    updateTotals();
+    showToast('Položka odstránená.');
+    return;
+  }
+
+  if(a==='move'){
+    const labels=(h.optGroups||[]).map(g=>g.label);
+    const toLabel=prompt(`Presun do sekcie (presný názov):\n${labels.join('\n')}`, labels[0]||'');
+    if(toLabel===null||!toLabel.trim()) return;
+    const moved=moveOptItemToGroup(h,gi,ii,toLabel.trim());
+    if(!moved) return;
+    moved.__manual=true;
+    saveCatalogOverride('admin-move');
+    rerenderOpt();
+    updateTotals();
+    showToast('Položka presunutá.');
+    return;
+  }
+
+  const numIn=prompt('Číslo položky (num):',String(item.num??''));
+  if(numIn===null) return;
+  const ni=prompt('Názov položky:',item.name||'');
+  if(ni===null) return;
+  const vi=prompt('Kategória (v):',item.v||'VD');
+  if(vi===null) return;
+  const pi=prompt('Cena (€):',String(Number(item.p)||0));
+  if(pi===null) return;
+  const ci=prompt('Farba (empty/olive/yellow/blue):',item.c||'');
+  if(ci===null) return;
+  const di=prompt('Popis:',item.d||'');
+  if(di===null) return;
+  const existingColorChoices=getItemColorOptions(item).join(', ');
+  const colorChoicesIn=prompt('Voľby farby (čiarkou, prázdne = bez dropdownu):',existingColorChoices);
+  if(colorChoicesIn===null) return;
+  const secIn=prompt('Sekcia (presný názov, prázdne = bez zmeny):','');
+  if(secIn===null) return;
+  const pNum=parseFloat(String(pi).replace(',','.'));
+  const target=h.optGroups[gi]&&h.optGroups[gi].items&&h.optGroups[gi].items[ii];
+  if(!target) return;
+  target.num=String(numIn).trim();
+  target.name=ni.trim();
+  target.v=vi.trim();
+  target.p=isNaN(pNum)?0:pNum;
+  target.c=(ci||'').trim();
+  target.d=di.trim();
+  const colorChoices=(colorChoicesIn||'').split(',').map(v=>v.trim()).filter(Boolean);
+  if(colorChoices.length){
+    target.choices=target.choices||{};
+    target.choices.farba=colorChoices;
+  }else if(target.choices && target.choices.farba){
+    delete target.choices.farba;
+    if(!Object.keys(target.choices).length) delete target.choices;
+  }
+  target.__manual=true;
+  if(secIn.trim()){
+    moveOptItemToGroup(h,gi,ii,secIn.trim());
+  }
+  saveCatalogOverride('admin-edit');
+  rerenderOpt();
+  updateTotals();
+  showToast('Položka upravená.');
+}
+function adminAddFixedItem(){
+  if(!adminEnabled) return;
+  const h=getH();
+  const labels=(h.optGroups||[]).map(g=>g.label);
+  const label=prompt(`Sekcia (presný názov):\n${labels.join('\n')}`, labels[0]||'');
+  if(label===null) return;
+  const num=prompt('Číslo položky (num):','999');
+  if(num===null) return;
+  const name=prompt('Názov položky:','Nová fixná položka');
+  if(name===null) return;
+  const v=prompt('Kategória (v):','VD');
+  if(v===null) return;
+  const p=prompt('Cena (€):','0');
+  if(p===null) return;
+  const d=prompt('Popis:','');
+  if(d===null) return;
+  const c=prompt('Farba (empty/olive/yellow/blue):','');
+  if(c===null) return;
+  const colorChoicesIn=prompt('Voľby farby (čiarkou, napr. Biela,Antracit):','');
+  if(colorChoicesIn===null) return;
+  const pNum=parseFloat(String(p).replace(',','.'));
+  let gi=h.optGroups.findIndex(g=>g.label===label.trim());
+  if(gi<0){
+    h.optGroups.push({label:label.trim(),items:[]});
+    gi=h.optGroups.length-1;
+  }
+  const colorChoices=(colorChoicesIn||'').split(',').map(v=>v.trim()).filter(Boolean);
+  const newItem={
+    num:String(num).trim(),
+    name:name.trim(),
+    v:v.trim(),
+    p:isNaN(pNum)?0:pNum,
+    d:d.trim(),
+    c:(c||'').trim(),
+    __manual:true
+  };
+  if(colorChoices.length) newItem.choices={farba:colorChoices};
+  h.optGroups[gi].items.push(newItem);
+  saveCatalogOverride('admin-add');
+  rerenderOpt();
+  updateTotals();
+  showToast('Fixná položka pridaná.');
 }
 
 // ── Action ──────────────────────────────────────────────
@@ -6783,7 +7482,7 @@ function calc() {
   const h=getH(), s=getS(), flat=buildFlat(h);
   const base=h.base;
   const discounts=h.discounts.reduce((t,d)=>t+d.amount,0);
-  let options=0; flat.forEach((item,fi)=>{if(s.optState[fi]) options+=item.p;});
+  let options=0; flat.forEach((item,fi)=>{if(s.optState[fi] && !isExcludedItem(h,item)) options+=item.p;});
   const custom=s.customRows.reduce((t,r)=>t+(parseFloat(r.price)||0),0);
   const action=s.actionRows.reduce((t,r)=>t+(parseFloat(r.amount)||0),0);
   const total=base-discounts+options+custom-action;
@@ -6800,7 +7499,7 @@ function updateTotals(){
   ['ph-disc','sum-disc'].forEach(id=>{const e=$(id);if(e)e.textContent='– '+f(discounts)+' €';});
   ['ph-opt','sum-opt'].forEach(id=>{const e=$(id);if(e)e.textContent=(options>=0?'+ ':'')+f(options+custom)+' €';});
   ['ph-act','sum-act'].forEach(id=>{const e=$(id);if(e)e.textContent=action>0?'– '+f(action)+' €':'0 €';});
-  ['ph-total','sum-total','mob-total'].forEach(id=>{const e=$(id);if(e)e.textContent=f(total)+' €';});
+  ['ph-total','sum-total','mob-total','floating-total-val'].forEach(id=>{const e=$(id);if(e)e.textContent=f(total)+' €';});
   ['ph-nodph','sum-nodph'].forEach(id=>{const e=$(id);if(e)e.textContent=f(nodph)+' €';});
   const sc=$(('sum-selcnt'));if(sc)sc.textContent=cnt+(cnt===1?' položka':cnt<5?' položky':' položiek');
   const nb=$('nb-opt');if(nb)nb.textContent=cnt;
@@ -6819,6 +7518,13 @@ function toggleSec(id,hdr){
   b.classList.toggle('open',!op);
   if(a)a.classList.toggle('open',!op);
 }
+function setAllSections(open){
+  document.querySelectorAll('.sec-body').forEach(b=>{
+    b.style.display=open?'block':'none';
+    b.classList.toggle('open',open);
+  });
+  document.querySelectorAll('.sec-toggle').forEach(t=>t.classList.toggle('open',open));
+}
 function scrollTo(id){
   const e=document.getElementById(id);
   if(!e)return;
@@ -6826,6 +7532,18 @@ function scrollTo(id){
   e.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
 }
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function refreshFloatingTotalVisibility(){
+  const el=document.getElementById('floating-total');
+  if(!el) return;
+  const isMobile=window.matchMedia && window.matchMedia('(max-width:860px)').matches;
+  const show=!isMobile && window.scrollY>420;
+  el.classList.toggle('show',show);
+}
+function initFloatingTotal(){
+  window.addEventListener('scroll',refreshFloatingTotalVisibility,{passive:true});
+  window.addEventListener('resize',refreshFloatingTotalVisibility);
+  refreshFloatingTotalVisibility();
+}
 
 // ═══════════════════════════════════════════════════════════
 // PDF EXPORT – Cover page + DOM SNOV logo + watermark + custom rows
@@ -6868,14 +7586,24 @@ const FLOOR_PLAN_UNO_MAXI_SRC="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQECWAJYAA
     <td class="ds">${d.desc}</td>
   </tr>`).join('');
 
-  const groupedOpt=[];
-  h.optGroups.forEach(group=>{
-    const items=group.items.filter((_,ii)=>{
-      const fi=flat.findIndex(f2=>h.optGroups.indexOf(group)===f2.gi&&ii===f2.ii);
-      return s.optState[fi];
+  const fiByGiIi=new Map(flat.map((it,idx)=>[it.gi+'|'+it.ii,idx]));
+  const buckets={}; // label -> selected normalized items
+  h.optGroups.forEach((group,gi)=>{
+    (group.items||[]).forEach((_,ii)=>{
+      const fi=fiByGiIi.get(gi+'|'+ii);
+      if(fi==null) return;
+      if(!s.optState[fi]) return;
+      const item=flat[fi];
+      if(!item || isEmptyOptRow(item)) return;
+      if(isExcludedItem(h,item)) return;
+      const key=resolveGroupLabel(item,group.label);
+      if(!buckets[key]) buckets[key]=[];
+      buckets[key].push(item);
     });
-    if(items.length) groupedOpt.push({label:group.label,items});
   });
+  const orderedKeys=GROUP_ORDER_III.filter(k=>buckets[k] && buckets[k].length);
+  const restKeys=Object.keys(buckets).filter(k=>!GROUP_ORDER_III.includes(k) && buckets[k] && buckets[k].length);
+  const groupedOpt=[...orderedKeys,...restKeys].map(label=>({label,items:buckets[label]}));
   const customActive=(s.customRows||[]).filter(r=>r.desc||r.price>0);
 
   const stripEmoji=s=>s.replace(/[\u{1F000}-\u{1FFFF}]/gu,'').replace(/[^\w\s\-\.\(\)\/áäčďéíľĺňóôŕšťúůýžÁÄČĎÉÍĽĹŇÓÔŔŠŤÚŮÝŽ]/g,'').trim();
@@ -6883,7 +7611,7 @@ const FLOOR_PLAN_UNO_MAXI_SRC="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQECWAJYAA
   const optHtml=(groupedOpt.length||customActive.length)?`
     ${groupedOpt.map(g=>`
       <div class="grp-title">${stripEmoji(g.label)}</div>
-      <table class="pdf-grid">${g.items.map(item=>`<tr class="pdf-row ${item.c==='olive'?'ry':item.c==='yellow'?'ry2':''}">
+      <table class="pdf-grid">${g.items.map(item=>`<tr class="pdf-row ${getRowTone(item)==='olive'?'ry':getRowTone(item)==='yellow'?'ry2':getRowTone(item)==='blue'?'rb2':''}">
         <td class="n">${item.num}</td><td class="nm">${item.name}</td>
         <td class="pdf-cat"><span class="pdf-badge">${item.v}</span></td>
         <td class="pr ${item.p<0?'gn':item.p===0?'mu':'ab'}">${item.p===0?'v&nbsp;cene':(item.p<0?'&#8722;&thinsp;':'&#43;&thinsp;')+eur(Math.abs(item.p))}</td>
@@ -6973,7 +7701,7 @@ table.pdf-grid .n{width:40px;max-width:40px;}
 .pct{width:100px;max-width:100px;text-align:right;font-weight:700;}
 .am,.pr{width:120px;max-width:120px;text-align:right!important;font-weight:700;font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap;}
 .gn{color:#166534;} .ab{color:#92400e;} .mu{color:#94a3b8;font-weight:400;font-size:9.5px;}
-.ry{background:#f0fdf5;} .rdisc{background:#ecfdf5;} .ry2{background:#fffbe6;}
+.ry{background:#f0fdf5;} .rdisc{background:#ecfdf5;} .ry2{background:#fffbe6;} .rb2{background:#eaf4ff;}
 .grp-title{background:#f1f5f9;padding:6px 12px;font-size:9px;font-weight:900;color:#1a2744;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid #dde4ef;border-top:1px solid #dde4ef;}
 .badge{display:inline-block;background:#fef3c7;color:#92400e;padding:1px 6px;border-radius:8px;font-size:8px;font-weight:800;text-transform:uppercase;white-space:nowrap;}
 .subtotal{display:flex;justify-content:space-between;padding:9px 16px;background:#fdf6e8;font-weight:800;font-size:12px;border-top:2px solid #dde4ef;}
@@ -7121,6 +7849,8 @@ ${actHtml?`<div class="sec"><div style="border:1.5px solid #dde4ef;border-radius
 loadFromStorage();
 renderTabs();
 renderAll();
+setAdminUi();
+initFloatingTotal();
 </script>
 </body>
 </html>
