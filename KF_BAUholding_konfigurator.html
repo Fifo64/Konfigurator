@@ -2,9 +2,16 @@
 <html lang="sk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>BAUholding – Cenový Konfigurátor</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="https://via.placeholder.com/192x192.png?text=BAU">
 <meta name="description" content="Cenový konfigurátor RD DOM SNOV – štandard, zľavy, voliteľná výbava a export ponuky (PDF).">
+<meta name="theme-color" content="#1a2744">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Konfigurátor">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
 :root{
@@ -248,8 +255,16 @@ tr:hover .desc-text{-webkit-line-clamp:10;}
   .tgrid{grid-template-columns:1fr;}
 }
 @media print{
+  @page {
+    margin-top: 2cm;
+    margin-bottom: 2cm;
+  }
   .mob-sticky{display:none!important;}
   body{padding-bottom:0!important;}
+  .irow, .item-row, tr, .totals, .card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 }
 
 /* DARK MODE */

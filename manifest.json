@@ -1,0 +1,20 @@
+{
+  "name": "BAUholding Konfigurátor",
+  "short_name": "Konfigurátor",
+  "start_url": "./KF_BAUholding_konfigurator.html",
+  "display": "standalone",
+  "background_color": "#1a2744",
+  "theme_color": "#1a2744",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192.png?text=BAU",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512.png?text=BAU",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
